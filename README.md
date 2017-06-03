@@ -8,7 +8,7 @@ Supplementary material and source code of paper "Bandwidth-Efficient Distributed
 Hsu, Chin-Chi, et al. "Bandwidth-efficient distributed k-nearest-neighbor search with dynamic time warping." Big Data (Big Data), 2015 IEEE International Conference on. IEEE, 2015.
 ```
 
-IEEE link (for BibTex reference format downloading):
+IEEE link (to download BibTex reference format):
 http://ieeexplore.ieee.org/document/7363799/?reload=true&arnumber=7363799
 
 ## Directories
