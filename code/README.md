@@ -9,12 +9,34 @@ gcc -o code -O3 -std=c99 -lm code.c
 ## Running
 
 ```
-./code [parameters] -f [input_file]
+./code arguments -f input_file
 ```
+
+## Arguments
+
+* -f: dataset file name (Required)
+* -k: the number of candidates to be retrieved (Default 10)
+  * 1 <= k <= s
+* -s: the number of sensors (candidates) (Default 500)
+  * 1 <= s <= Total number of time series in a dataset - 1
+  * Able to test multiple values (e.g. 500,1000,1500) split by comma without space
+* -m: the number of sites (Default 50)
+  * 1 <= m <= s
+  * Able to test multiple values (e.g. 50,100,150) split by comma without space
+* -t: time series length (Default maximum length)
+  * 1 <= t <= Maximum length provided by a dataset
+* -q: sensor (time series) index to be assigned as the query (Default -1)
+  * -2 <= q <= s
+  * q == -1: Let every time series be the query in turns (for small data)
+  * q == -2: Randomly choose a time series as the query for 100 times (for big data)
+* -r: The parameter R. The number of segments cut from a segment at the previous level (Default 2)
+  * 2 <= r
+* -n: The parameter N. The number of segments at the first level (Default round(sqrt(t / 2)))
+  * 1 <= n <= t
 
 ## Input file
 
-The file [input_file] format follows the setting of UCR datasets:
+The format of **input_file** follows the setting of UCR datasets:
 
 ```
 Keogh, E., Zhu, Q., Hu, B., Hao. Y.,  Xi, X., Wei, L. & Ratanamahatana, C. A.
@@ -24,7 +46,7 @@ http://www.cs.ucr.edu/~eamonn/time_series_data/
 
 ## Output file
 
-The original extension name in [input_file] is replaced with "out".
+The file extension name of **input_file** is replaced with "out".
 The file contains the following group of tables.
 
 Table format:
@@ -46,28 +68,6 @@ Table contents:
 * **Table 11**: mean of candidate sites used for initialization
 * **Table T = 12 to 20**: mean of candidate sites pruned at the resolution level (T - 11)
 * **Table 21**: mean of candidate sites pruned at the resolution level 10 or more
-
-## Parameters
-
-* -f: dataset file name (Required)
-* -k: the number of candidates to be retrieved (Default 10)
-  * 1 <= k <= s
-* -s: the number of sensors (candidates) (Default 500)
-  * 1 <= s <= Total number of time series in a dataset - 1
-  * Able to test multiple values (e.g. 500,1000,1500) split by comma without space
-* -m: the number of sites (Default 50)
-  * 1 <= m <= s
-  * Able to test multiple values (e.g. 50,100,150) split by comma without space
-* -t: time series length (Default maximum length)
-  * 1 <= t <= Maximum length provided by a dataset
-* -q: sensor (time series) index to be assigned as the query (Default -1)
-  * -2 <= q <= s
-  * q == -1: Let every time series be the query in turns (for small data)
-  * q == -2: Randomly choose a time series as the query for 100 times (for big data)
-* -r: The parameter R. The number of segments cut from a segment at the previous level (Default 2)
-  * 2 <= r
-* -n: The parameter N. The number of segments at the first level (Default round(sqrt(t / 2)))
-  * 1 <= n <= t
 
 ## Experimented Parameters for UCR Datasets
 
