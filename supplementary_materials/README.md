@@ -8,4 +8,5 @@
 
 ## Others
 
-Images on this website are SVG format. Please use browsers that can display SVG image.
+We use SVG image files for better display layout. 
+Please open the webpages using browsers that support SVG image.
