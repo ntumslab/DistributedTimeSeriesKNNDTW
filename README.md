@@ -1,7 +1,5 @@
 # Bandwidth-Efficient Distributed k-Nearest-Neighbor Search with Dynamic Time Warping
 
-Supplementary material and source code
-
 ## Directories
 
 * **supplementary_materials**: additional proofs or explanations about our proposed framework.
