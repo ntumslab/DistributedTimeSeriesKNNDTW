@@ -1,5 +1,7 @@
 # Bandwidth-Efficient Distributed k-Nearest-Neighbor Search with Dynamic Time Warping
 
+Chin-Chi Hsu, Perng-Hwa Kung, Mi-Yen Yeh, Shou-De Lin and Phillip B. Gibbons
+
 ## Directories
 
 * **supplementary_materials**: additional proofs or explanations about our proposed framework.
