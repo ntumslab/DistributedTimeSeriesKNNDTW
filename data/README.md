@@ -2,11 +2,15 @@
 
 ## Data File Format
 
-One time series per line.
+Our experimented data files follow the format of UCR datasets.
 
-* The first value in a line is the class of a time series (not used in our work).
-* Then there exist T values representing a time series of length T.
+One time series of length T per line:
 
+```
+time_series_label data_point_1 data_point_2 ... data_point_T
+```
+
+Our work does not use the first value that represents the class label of time series.
 
 ## Synthetic Dataset
 
