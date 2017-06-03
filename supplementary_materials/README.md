@@ -2,9 +2,9 @@
 
 ## Paper Appendix
 
-* **lower_bounding_function_proofs.htm**: related proofs of lower bounding functions
-* **transmission.htm**: more study on multi-resolution transmission
-* **transmission_analysis.htm**: transmission bandwidth analysis
+* **lower_bounding_function_proofs.htm**: related proofs of lower bounding functions.
+* **transmission.htm**: more study on multi-resolution transmission.
+* **transmission_analysis.htm**: transmission bandwidth analysis.
 
 ## Others
 
