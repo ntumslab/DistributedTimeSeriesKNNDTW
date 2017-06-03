@@ -28,9 +28,7 @@ where x ~ Normal(mean = 0, variance = 1)
 
 ### Downloading Link
 
-```
 https://www.dropbox.com/s/mpfufx8xkzecn7k/random_walk_data.zip
-```
 
 ## UCR Time Series Datasets
 
