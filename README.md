@@ -13,6 +13,6 @@ http://ieeexplore.ieee.org/document/7363799/?reload=true&arnumber=7363799
 
 ## Directories
 
-* **supplementary_materials**: detailed proofs / explanations of this work.
+* **supplementary_materials**: additional proofs or explanations about our proposed framework.
 * **code**: source code for our experiments.
 * **data**: datasets for our experiments.
