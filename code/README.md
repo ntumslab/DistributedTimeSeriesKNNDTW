@@ -20,7 +20,7 @@ Keogh, E., Zhu, Q., Hu, B., Hao. Y.,  Xi, X., Wei, L. & Ratanamahatana, C. A.
 http://www.cs.ucr.edu/~eamonn/time_series_data/
 ```
 
-## Output file [input_file].out
+## Output file
 
 The original extension name in [input_file] is replaced with "out".
 The file contains the following group of tables.
