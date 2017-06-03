@@ -27,11 +27,11 @@ gcc -o code -O3 -std=c99 -lm code.c
   * 1 <= t <= Maximum length provided by a dataset
 * -q: sensor (time series) index to be assigned as the query (Default -1)
   * -2 <= q <= s
-  * q == -1: Let every time series be the query in turns (for small data)
-  * q == -2: Randomly choose a time series as the query for 100 times (for big data)
-* -r: The parameter R. The number of segments cut from a segment at the previous level (Default 2)
+  * q == -1: let every time series be the query in turns (for small data)
+  * q == -2: randomly choose a time series as the query for 100 times (for big data)
+* -r: the parameter R. The number of segments cut from a segment at the previous level (Default 2)
   * 2 <= r
-* -n: The parameter N. The number of segments at the first level (Default round(sqrt(t / 2)))
+* -n: the parameter N. The number of segments at the first level (Default round(sqrt(t / 2)))
   * 1 <= n <= t
 
 ## Input file
