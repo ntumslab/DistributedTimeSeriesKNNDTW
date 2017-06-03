@@ -69,14 +69,14 @@ Table contents:
 * **Table T = 12 to 20**: mean of candidate sites pruned at the resolution level (T - 11)
 * **Table 21**: mean of candidate sites pruned at the resolution level 10 or more
 
-## Experimented Parameters for UCR Datasets
+## Experimented Arguments for UCR Datasets
 
 ```
 ./code -s 500,1000,1500 -m 50,100,150 -f [UCR dataset text file]
 ```
 
 
-## Experimented Parameters for the Synthetic Dataset
+## Experimented Arguments for the Synthetic Dataset
 
 ```
 ./code -s 12499 -m 500,1000,1500 -k 30 -q -2 -f synthetic_data.txt
