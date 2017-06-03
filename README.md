@@ -13,4 +13,5 @@ Hsu, Chin-Chi, et al. "Bandwidth-efficient distributed k-nearest-neighbor search
 ```
 
 IEEE link (to download BibTex reference format):
+
 http://ieeexplore.ieee.org/document/7363799/?reload=true&arnumber=7363799
