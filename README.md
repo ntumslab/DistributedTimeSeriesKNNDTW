@@ -13,6 +13,6 @@ http://ieeexplore.ieee.org/document/7363799/?reload=true&arnumber=7363799
 
 ## Directories
 
-* **supplementary_materials**: supplemental materials and detailed prove/explanation of this work. index.htm is the home page.
-* **code**: source code implemented for the experiments.
-* **data**: datasets used for the experiments.
+* **supplementary_materials**: detailed proofs / explanations of this work.
+* **code**: source code for our experiments.
+* **data**: datasets for our experiments.
