@@ -6,7 +6,7 @@
 * **transmission.htm**: more study on multi-resolution transmission.
 * **transmission_analysis.htm**: transmission bandwidth analysis.
 
-## Others
+## Comments
 
-We use SVG image files for better display layout. 
-Please open the webpages using browsers that support SVG image.
+We use SVG figures for better display layout.
+Please open the webpages with browsers that support SVG figures.
