@@ -11,7 +11,8 @@ Chin-Chi Hsu, Perng-Hwa Kung, Mi-Yen Yeh, Shou-De Lin and Phillip B. Gibbons
 ## References
 
 ```
-Hsu, Chin-Chi, et al. "Bandwidth-efficient distributed k-nearest-neighbor search with dynamic time warping." Big Data (Big Data), 2015 IEEE International Conference on. IEEE, 2015.
+C. C. Hsu, P. H. Kung, M. Y. Yeh, S. D. Lin and P. B. Gibbons, "Bandwidth-efficient distributed k-nearest-neighbor search with dynamic time warping," 2015 IEEE International Conference on Big Data (Big Data), Santa Clara, CA, 2015, pp. 551-560.
+doi: 10.1109/BigData.2015.7363799
 ```
 
 IEEE link (to download BibTex reference format):
