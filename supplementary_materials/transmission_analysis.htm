@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Communication-Efficient Distributed Pattern Matching under the Dynamic Time Warping Distance</title>
+<link rel = "stylesheet" type = "text/css" href = "style_configuration.css">
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+</head>
+<body>
+
+<h2>Transmission bandwidth analysis</h2>
+<p>
+In the multi-resolution transmission, we propose the concept of replacing transmitted data points with signals. Clearly in the worst case, if data points from the query reference are transmitted all over the resolution levels \( 1 \leq l \leq L \), then it will consume more communiation cost than direct transmission of the exact query reference (i.e. the baseline model) since there exist extra communication cost from signal transmission.
+</p>
+
+<p>
+Fortunately, according to our experiments, the worst case rarely occurs for most sites. As long as all the time series in a site are pruned (i.e. judged not \( k \) NN) by lower bounds at certain one resolution level, the server will no longer communicate with the site for this \( k \) NN retrieval.
+</p>
+
+<p>
+Besides, since the worst case rarely happens, it it less possible to be a disaster to overall communication cost reduction. <b>Here we would like to theoretically analyze the extra comminucation cost from signal transmission, and show that they actually have little impact to overall communication cost.</b>
+</p>
+
+<hr>
+
+<h3>Observation</h3>
+
+<p>
+Obviously, there are two parts for multi-resolution transmission: <b>Sampled data points</b> ( \( max \) and \( min \) in each segment ) and <b>signals</b>.
+</p>
+
+<p>
+Note that each data point in the query reference is sent <i>at most once</i> during the \( k \) NN retrieval. If a data point is going to be transmitted again, a signal will become the replacement of the data point -- the server sends the signal but not the data point.
+</p>
+
+<p>
+As a result, we can first analyze the overall number of data points required for the multi-resolution transmission <i>without</i> signals. Then we preserve the space of \( X \) data points but replace others with signal space. \( X \) is the length (number of data points) of the query reference \( Q \).
+</p>
+
+<hr>
+
+<h3>Analysis</h3>
+
+<p>
+To simplify calculation, our goal is to offer an <b>upper bound</b> of the extra communication cost from signal transmission.
+</p>
+
+<p>
+<img src = "images/level_analysis.svg" style = "width: 600px;"><br>
+Using (both equal-size and unequal-size allowed) segmentation on the query, we have \( N \) segments of possibly different lengths at the first resolution level. Let the i-th segment have the length \( len_i \) (total length of the query \( X = \sum_{i = 1}^{N} (len_i) \). For later resolution levels \( l > 1 \), the i-th segment is separated into \( R^{l - 1} \) sub-segments because each segment is <i>equally</i> cut into \( R \) sub-segments at the next level. At the final level \( L \), there are at most \( len_i \) segments, each of which is of length only \( 1 \).
+</p>
+
+<p>
+Since a segment is <i>equally</i> cut between two adjacent levels, we claim that the number of segments at the final level \( L_i = len_i = R^{\log_R{(len_i)}} \leq R^{\lceil \log_R{(len_i)} \rceil} \).
+</p>
+
+<p>
+On the other hand, to prepare for the construction of the next resolution level, every segment needs at most 2 signals \( max \) and \( min \) to replace its two representative data points (the general rule <a href = "transmission.htm#rule1">1</a> and <a href = "transmission.htm#rule2">2</a> may require less than 2 data points). Each data point is of \( B \) bits.
+</p>
+
+<p>
+Fianlly, we have the an <i>upper bound</i> of total anount of communication cost as follows:
+$$
+\sum_{i = 1}^{N} ( 2B \sum_{l = 0}^{\lceil \log_R{(len_i)} \rceil} R^l)
+$$
+</p>
+
+<p>
+Note that we do <i>NOT</i> consider signals replacing data points for now. All of the transmission cost comes from only data points here. As a result, we have the following inferences:
+$$
+\begin{array}{r c l l}
+\sum_{i = 1}^{N} ( 2B \sum_{l = 0}^{\lceil \log_R{(len_i)} \rceil} R^l) & = & 2B \sum_{i = 1}^{N} \sum_{l = 0}^{\lceil \log_R{(len_i)} \rceil} R^l & \\
+& = & 2B \sum_{i = 1}^{N} \frac{R^{\lceil \log_R{(len_i)} \rceil + 1} - 1}{R - 1} & \because \text{geometric series} \\
+& \leq & 2B \sum_{i = 1}^{N} \frac{R^{\log_R{(len_i)} + 2} - 1}{R - 1} & \because \lceil x \rceil \leq x + 1 \\ 
+& = & 2B \sum_{i = 1}^{N} \frac{len_i R^2 - 1}{R - 1} & \\
+& = & \frac{2B}{R - 1} (R^2 \sum_{i = 1}^{N} len_i - N) & \\
+& = & B * \frac{2}{R - 1} (R^2 X - N) & \because \sum_{i = 1}^{N} len_i = X \\
+\end{array}
+$$
+In other words, there are <b>at most</b> \( \frac{2}{R - 1} (R^2 X - N) \) data points of \( B \) bits transmitted through the multi-resolution transmission structure.
+</p>
+<p>
+We consider signals now. Only the space of \( X \) data points is preserved, while others are replaced with signal space. A signal is of \( \lceil \log_2{R} \rceil \) bits. An <i>upper bound</i> of overall amount of communication cost is:
+$$
+BX + \lceil log_2{R} \rceil (\frac{2}{R - 1} (R^2 X - N) - X)
+$$
+Note that the first term represents the amount of comminication cost for the baseline model, while the second term means the <i>upper bound</i> of extra communication cost coming from signal transmission.
+</p>
+
+<p>
+Let \( R = 2 \) according to our experiments. We have:
+$$
+\begin{array}{r c l l}
+\lceil log_2{R} \rceil (\frac{2}{R - 1} (R^2 X - N) - X) & = & 7X - 2N & \\
+& \leq & 7X \\
+\end{array}
+$$
+That is, even if all levels are transmitted as the worse case, the multi-resolution transmission structure pays extra communication cost of <b>at most 7</b> bits for each data point in the query reference. Because a usual data point occupies more bits, say \( B = 32 \), <b>the structure brings at most \( \frac{32 + 7}{32} \) extra bandwidth ratio (compared with the baseline model) in the worst case.</b>
+</p>
+
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Communication-Efficient Distributed Pattern Matching under the Dynamic Time Warping Distance</title>
+<link rel = "stylesheet" type = "text/css" href = "style_configuration.css">
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+</head>
+<body>
+
+<h2>Related proofs of lower bounding functions</h2>
+<p>
+Due to page limits, we do not show all the proofs of lower bounding functions in our paper. Those proofs will be presented here.  All the notations follow our paper.
+</p>
+
+<hr>
+
+<h3>Preliminaries</h3>
+
+<p>
+Our paper has shown the corresponding proofs of these theorems. Here we list them for for citations later.
+</p>
+<p class = "theorem">
+<b>Theorem P1</b>: The width of envelope is more narrow at a higher resolution level. That is, 
+\[
+	q_{lb,i}^{(l+1)} \geq q_{lb,i}^{(l)} \text{ and } q_{ub,i}^{(l+1)} \leq q_{ub,i}^{(l)}
+\]
+</p>
+
+<p class = "theorem">
+<b>Theorem P2</b>: There is a lower bound \( d_{lb} \) of the square difference between \( q_i \) , the \( i \) -th data point of \( Q \) , and \( c_j \) , the \( j \) -th data point of a candidate time series \( C \). That is,
+\[
+	\begin{align}
+		d_{lb}(q_i^{(l)}, c_j) & = \left \{ \begin{array}{l l}
+				(q_{ub,i}^{(l)} - c_j)^2, & \text{if } q_{ub,i}^{(l)} < c_j, \\
+				(q_{lb,i}^{(l)} - c_j)^2, & \text{if } q_{lb,i}^{(l)} > c_j, \\
+				0, & \text{otherwise.}
+			\end{array} \right. \\
+		& \leq (q_i - c_j)^2 \\
+		& = d(q_i, c_j)
+	\end{align}
+\]
+</p>
+
+<p class = "theorem">
+<b>Theorem P3</b>: The lower bound distance between two data points is increasing at higher resolution levels. That is,
+\[
+	d_{lb}(q_i^{(l+1)}, c_j) \geq d_{lb}(q_i^{(l)}, c_j)
+\]
+</p>
+
+<hr>
+
+<h3>Theorems about \( LB_{KimFL} \)</h3>
+
+<p>
+Since both \( LB_{Kim} \) [1] and its variant \( LB_{KimFL} \) [2] are proved lower bounds of DTW, we have
+\[
+	LB_{KimFL}(Q, C) \leq DTW(Q, C)
+\]
+where \( Q \) is a time series as query reference, and \( C \) is another time series to be queried.<br>
+Now we further prove that \( LB_{KimFL} \) can be included in our proposed framework i.e. \( LB_{KimFL} \) is also a lower bound even for a coarse (not containing information of all data points) query reference \( Q^{(l)} \) at resolution level \( l \).
+</p>
+
+
+<p class = "theorem">
+<b>Theorem 1</b>: \( LB_{KimFL}(Q^{(l)}, C) \) is a lower bound of \( DTW(Q,C) \). That is,
+\[ LB_{KimFL}(Q^{(l)}, C) \leq DTW(Q, C) \textbf{, } \forall 1 \leq l \leq L, \]
+</p>
+<p class = "proof">
+<b>Proof</b>: Let \( W_{DTW}^* \) be the optimal warping path of \( DTW(Q, C) \). Then by Theorem P2, we have
+\[
+	\begin{align}
+		LB_{KimFL}(Q^{(l)}, C) & = \max\{d_{lb}(q_1^{(l)}, c_1), d_{lb}(q_X^{(l)}, c_Y)\} \\
+		& \leq \max\{d(q_1, c_1), d(q_X, c_Y)\} \\
+		& = LB_{KimFL}(Q,C)\\
+		& \leq DTW(Q, C).
+	\end{align}
+\]
+</p>
+
+<p class = "theorem">
+<b>Theorem 2</b>: \( LB_{KimFL} \) increases as the resolution level increases. That is,
+\[
+	LB_{KimFL}(Q^{(l)}, C) \leq LB_{KimFL}(Q^{(l+1)}, C)
+\]
+</p>
+<p class = "proof">
+<b>Proof</b>: By Theorem P3, we have
+\[
+	\begin{align}
+		LB_{KimFL}(Q^{(l)}, C) & = \max\{d_{lb}(q_1^{(l)}, c_1), d_{lb}(q_X^{(l)}, c_Y)\} \\
+		& \leq \max\{d_{lb}(q_1^{(l+1)}, c_1), d_{lb}(q_X^{(l+1)}, c_Y)\} \\
+		& = LB_{KimFL}(Q^{(l+1)}, C)
+	\end{align}
+\]
+</p>
+
+<p>
+References:
+<ul>
+<li>[1] S.-W. Kim, S. Park, and W. Chu, ¡§An index-based approach for similarity search supporting time warping in large sequence databases,¡¨ in Proc. of IEEE ICDE, 2001, pp. 607¡V614.</li>
+<li>[2] T. Rakthanmanon, B. Campana, A. Mueen, G. Batista, B. Westover, Q. Zhu, J. Zakaria, and E. Keogh, ¡§Addressing big data time series: Mining trillions of time series subsequences under dynamic time warping,¡¨ ACM Trans. Knowl. Discov. Data, vol. 7, no. 3, pp. 10:1¡V10:31, Sep. 2013.</li>
+</ul>
+</p>
+
+<hr>
+
+<h3>Theorems about \( LB_{Keogh} \)</h3>
+
+<p>
+Similar to the previous section, since \( LB_{Keogh} \) [1] is proved a lower bound of DTW, natually we have
+\[
+	LB_{Keogh}(Q, C) \leq DTW(Q, C)
+\]
+where \( Q \) is a time series as query reference, and \( C \) is another time series to be queried.<br>
+Now we further prove that \( LB_{Keogh} \) can be included in our proposed framework i.e. \( LB_{Keogh} \) is also a lower bound even for a coarse (not containing information of all data points) query reference \( Q^{(l)} \) at resolution level \( l \).<br>
+\( LB_{Keogh} \) requires to build an envelope around either \( Q \) (denoted as \( LB_{KeoghEQ} \) ) or \( C \) (denoted as \( LB_{KeoghEC} \) ), as [2] comments. We would like to prove both versions.
+</p>
+
+<p class = "theorem">
+<b>Theorem 1</b>: \( LB_{Keogh}(Q^{(l)}, C) \) is a lower bound of \( DTW(Q,C) \). That is,
+\[
+	LB_{Keogh}(Q^{(l)}, C) \leq DTW(Q, C) \text{, } \forall 1 \leq l \leq L,
+\]
+where \( L \) is the total level number of the multi-resolution representation of \( Q \).
+</p>
+<p class = "proof">
+<b>Proof</b>: We start with \( LB_{KeoghEQ} \). By the definition of multi-resolution representation, we have
+\[
+	\begin{align}
+		upper_i & = \max_{t = i - r ... i + r}{q_t} \\
+		& \leq \max_{t = i - r ... i + r}{q_{ub,t}^{(l)}} \\
+		& = upper_i^{(l)} \\
+		lower_i & = \min_{t = i - r ... i + r}{q_t} \\
+		& \geq \min_{t = i - r ... i + r}{q_{lb,t}^{(l)}} \\
+		& = lower_i^{(l)} \\
+	\end{align}
+\]
+Then we obtain the following inequality:
+\[
+	\begin{align}
+		LB_{KeoghEQ}(Q^{(l)}, C) & = \sum_{j = 1}^X
+			\left \{ \begin{array}{l l}
+				(c_j - upper_j^{(l)})^2 & \text{if } upper_j^{(l)} < c_j \\
+				(c_j - lower_j^{(l)})^2 & \text{if } lower_j^{(l)} > c_j \\
+				0 & \text{otherwise}
+			\end{array} \right. \\
+		& \leq \sum_{j = 1}^X
+			\left \{ \begin{array}{l l}
+				(c_j - upper_j)^2 & \text{if } upper_j < c_j \\
+				(c_j - lower_j)^2 & \text{if } lower_j > c_j \\
+				0 & \text{otherwise}
+			\end{array} \right. \\
+		& = LB_{KeoghEQ}(Q, C) \\
+		& \leq DTW(Q, C)
+	\end{align}
+\]
+For case of \( LB_{KeoghEC} \), the inequality is represented as
+\[
+	\begin{align}
+		LB_{KeoghEC}(Q^{(l)}, C) & = \sum_{i = 1}^X
+			\left \{ \begin{array}{l l}
+				(q_{lb, i}^{(l)} - upper_i)^2 & \text{if } upper_i < q_{lb, i}^{(l)} \\
+				(q_{ub, i}^{(l)} - lower_i)^2 & \text{if } lower_i > q_{ub, i}^{(l)} \\
+				0 & \text{otherwise}
+			\end{array} \right. \\
+		& \leq \sum_{i = 1}^X
+			\left \{ \begin{array}{l l}
+				(q_i - upper_i)^2 & \text{if } upper_i < q_i \\
+				(q_i - lower_i)^2 & \text{if } lower_i > q_i \\
+				0 & \text{otherwise}
+			\end{array} \right. \\
+		& = LB_{KeoghEC}(Q, C) \\
+		& \leq DTW(Q, C)
+	\end{align}
+\]
+</p>
+
+<p class = "theorem">
+<b>Theorem 2</b>: \( LB_{Keogh}(Q^{(l)}, C) \) increases as the resolution level increases. That is,
+\[
+	LB_{Keogh}(Q^{(l)}, C) \leq LB_{Keogh}(Q^{(l+1)}, C)
+\]
+</p>
+<p class = "proof">
+<b>Proof</b>: For \( LB_{KeoghEQ} \), 
+\[
+	\begin{align}
+		upper_i^{(l+1)} \leq upper_i^{(l)}, lower_i^{(l+1)} \geq lower_i^{(l)} & \because \text{Theorem P1}\\
+		\Rightarrow d_{lb}(qe_j^{(l+1)}, c_j) \geq d_{lb}(qe_j^{(l)}, c_j) & \because \text{Theorem P3} \text{ where } qe_j^{(l)} = (upper_j^{(l)}, lower_j^{(l)})
+	\end{align}
+\]
+\[
+	\begin{align}
+		LB_{KeoghEQ}(Q^{(l)}, C) & = \sum_{j = 1}^X d_{lb}(qe_j^{(l)}, c_j) \\
+		& \leq \sum_{j = 1}^X d_{lb}(qe_j^{(l+1)}, c_j) \\
+		& = LB_{KeoghEQ}(Q^{(l+1)}, C)
+	\end{align}
+\]
+As for \( LB_{KeoghEC} \),
+\[
+	\begin{align}
+		d_{lb}(q_i^{(l+1)}, ce_i) \geq d_{lb}(q_i^{(l)}, ce_i) & \because \text{Theorem P3} \text{ where } ce_i = (upper_i, lower_i) \\
+	\end{align}
+\]
+\[
+	\begin{align}
+		LB_{KeoghEC}(Q^{(l)}, C) & = \sum_{i = 1}^X d_{lb}(q_i^{(l)}, ce_j) \\
+		& \leq \sum_{i = 1}^X d_{lb}(q_i^{(l+1)}, ce_j) \\
+		& = LB_{KeoghEC}(Q^{(l+1)}, C)
+	\end{align}
+\]
+</p>
+
+<p>
+References:
+<ul>
+<li>[1] E. Keogh and C. A. Ratanamahatana, ¡§Exact indexing of dynamic time warping,¡¨ Knowledge and Information Systems, vol. 7, no. 3, pp. 358¡V386, 2005.</li>
+<li>[2] T. Rakthanmanon, B. Campana, A. Mueen, G. Batista, B. Westover, Q. Zhu, J. Zakaria, and E. Keogh, ¡§Addressing big data time series: Mining trillions of time series subsequences under dynamic time warping,¡¨ ACM Trans. Knowl. Discov. Data, vol. 7, no. 3, pp. 10:1¡V10:31, Sep. 2013.</li>
+</ul>
+</p>
+
+</body>
+</html>

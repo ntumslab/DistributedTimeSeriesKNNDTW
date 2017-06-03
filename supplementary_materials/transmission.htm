@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Communication-Efficient Distributed Pattern Matching under the Dynamic Time Warping Distance</title>
+<link rel = "stylesheet" type = "text/css" href = "style_configuration.css">
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+</head>
+<body>
+
+<h2>More study on multi-resolution transmission</h2>
+<p>
+We have introduced the concept of multi-resolution transmission in our paper. Considering readability and page limits, we take only a simplified example.
+</p>
+	
+<p>
+In this webpage, we describe the complete <a href = "#rule">general rules</a> of transmission (what our code implements in fact). There is a step-by-step <a href = "#example">example</a> to help readers understand how to apply the general rules.
+</p>
+
+<hr>
+
+<h3><a id = "rule">General Rules</a></h3>
+
+<ol>
+	<li>
+		<h4><a id = "rule1">Level-\(l\) segment length \( len = 1 \)</a></h4>
+		<img src = "images/rule_1.svg" style = "width: 500px;"><br>
+		<ul>
+			<li>Server encoding: <b>Do nothing.</b></li>
+			<li>Sites decoding: <b>Copy the data point to the next level.</b></li>
+			<li>Note:</li>
+			<ol>
+				<li>\( max = min \) always since \( len = 1 \).</li>
+			</ol>
+		</ul>
+	</li>
+	<li>
+		<h4><a id = "rule2">Level-\(l\) segment length \( len = 2 \)</a></h4>
+		<table class = "imageTable">
+			<tr>
+				<th>
+					Case 1<br>
+					\( q_i \leq q_{i + 1} \Rightarrow sig = 0 \)
+				</th>
+				<th>
+					Case 2<br>
+					\( q_i \geq q_{i + 1} \Rightarrow sig = 1 \)
+				</th>
+			</tr>
+			<tr>
+				<td>
+					<img src = "images/rule_2_1.svg" style = "width: 500px;">
+				</td>
+				<td>
+					<img src = "images/rule_2_2.svg" style = "width: 500px;">
+				</td>
+			</tr>
+		</table>
+		<ul>
+			<li>Server encoding: <b>Write a 1-bit signal to indicate one of the above cases.</b></li>
+			<li>Sites decoding: <b>Read 1 bit and arrange the new locations of old data points at the next level according to the above cases.</b></li>
+			<li>Note:</li>
+			<ol>
+				<li>Such segment must be cut into two segments of length \( len =  1 \) at the next level.</li>
+			</ol>
+		</ul>
+	</li>
+	<li>
+		<h4><a id = "rule3">Level-\(l\) segment length \( 3 \leq len \leq R \)</a></h4>
+		<img src = "images/rule_3.svg" style = "width: 800px;"><br>
+		<ul>
+			<li>Server encoding: <b>Write two \( \lceil \log_2{len} \rceil \) -bit signals \( sig_{(l, p, max)}, sig_{(l, p, min)} \) followed by consecutive new data points \( D \).</b></li>
+			<li>Sites decoding: <b>Read two \( \lceil \log_2{len} \rceil \) -bit signals to arrange new locations of old data points, and then read enough \( B \) -bit data to fill in new data points \( D \) in the order.</b></li>
+			<li>Note:</li>
+			<ol>
+				<li>Such segment is cut into \( len \) segments, each of which is of length \( len = 1 \) at the next level.</li>
+				<li>\( 0 \leq a \leq len - 1, 0 \leq b \leq len - 1 \). The figure does NOT imply \( a \leq b \).</li>
+				<li>Since each segment at the next level is of length 1, \( max = min \) for each segment.</li>
+			</ol>
+		</ul>
+	</li>
+	<li>
+		<h4><a id = "rule4">Level-\(l\) segment length \( R < len < 2R \)</a></h4>
+		<img src = "images/rule_4.svg" style = "width: 800px;"><br>
+		<ul>
+			<li>Server encoding: <b>Write two \( \lceil \log_2{R} \rceil \) -bit signals \( sig_{(l, p, max)}, sig_{(l, p, min)} \) followed by consecutive new data points \( D \).</b></li>
+			<li>Sites decoding: <b>Read two \( \lceil \log_2{R} \rceil \) -bit signals to arrange new locations of old data points, and then read enough \( B \) -bit data to fill in new data points \( D \) in the order.</b></li>
+			<li>Note:</li>
+			<ol>
+				<li>Such segment CANNOT be cut into segments of equal length at the next level since \( \frac{len}{R} \notin \mathbb{N} \).</li>
+				<li>The first \( R - 1 \) segments at the next level are of length \( len = 1 \). That is, \( max = min \) in this \( R - 1 \) segments.</li>
+				<li>The last segment at the next level is NEVER assumed \( max = min \).</li>
+				<li>\( 0 \leq a \leq R - 1, 0 \leq b \leq R - 1 \). The figure does NOT imply \( a \leq b \).</li>
+			</ol>
+		</ul>
+	</li>
+	<li>
+		<h4><a id = "rule5">Level-\(l\) segment length \( len \geq 2R \)</a></h4>
+		<img src = "images/rule_5.svg" style = "width: 800px;"><br>
+		<ul>
+			<li>Server encoding: <b>Write two \( \lceil \log_2{R} \rceil \) -bit signals \( sig_{(l, p, max)}, sig_{(l, p, min)} \) followed by consecutive new data points \( D \).</b></li>
+			<li>Sites decoding: <b>Read two \( \lceil \log_2{R} \rceil \) -bit signals to arrange new locations of old data points, and then read enough \( B \) -bit data to fill in new data points \( D \) in the order.</b></li>
+			<li>Note:</li>
+			<ol>
+				<li>Each segment at the next level is NEVER assumed \( max = min \).</li>
+				<li>The first \( R - 1 \) segments at the next level are of length \( len = \lfloor \frac{len}{R} \rfloor \).</li>
+				<li>\( 0 \leq a \leq R - 1, 0 \leq b \leq R - 1 \). The figure does NOT imply \( a \geq b \).</li>
+			</ol>
+		</ul>
+	</li>
+</ol>
+
+<hr>
+
+<h3><a id = "example">Example</a></h3>
+
+<p>
+We have a query of length \( |Q| = X = 13 \) as follows:<br>
+<img src = "images/example_query.svg" style = "width: 800px;">
+</p>
+
+<p>
+Suppose that we want the number of segments \( N = 3 \) at the first level. Using certain segmentation approach, we obtain:<br>
+<img src = "images/example_segmentation.svg" style = "width: 800px;"><br>
+The <span style = "font-weight: bold; color: fuchsia;">fuchsia bold lines</span> are boundaries among segments according to the segmentation approach.
+</p>
+
+<p>
+Then we record \( [max, min, len] \) of each segment:<br>
+<img src = "images/example_segment_level_1.svg" style = "width: 800px;"><br>
+This is the level-1 segmentation in the <b>server</b>.<br>
+Suppose that we want a segment is cut into \( R = 3 \) segments at the next level.
+</p>
+<p>
+Here we describe step-by-step interactions between the server and sites as an example of the multi-resolution transmission.
+</p>
+
+<table class = "imageTable">
+	<tr>
+		<th rowspan = "2" style = "width: 10%;">
+			Level 1
+		</th>
+		<th style = "width: 5%;">
+			Server
+		</th>
+		<td>
+			<img src = "images/example_segment_level_1.svg" style = "width: 800px;"><br>
+			<ul>
+				<li>
+					Transmit \( [max, min, len] \) of all segments to sites.
+				</li>
+				<li>
+					Transmit \( R \) to sites.
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Site
+		</th>
+		<td>
+			<img src = "images/example_segment_level_1.svg" style = "width: 800px;"><br>
+			<ul>
+				<li>
+					Receive \( [max, min, len] \) and \( R \) from the server.
+				</li>
+			</ul>
+			<img src = "images/example_envelope_level_1.svg" style = "width: 800px;"><br>
+			<ul>
+				<li>
+					Repeat data points to construct \( Q^{(1)} = (Q_{ub}^{(1)}, Q_{lb}^{(1)}) \).
+				</li>
+			</ul>	
+		</td>
+	</tr>
+	<tr>
+		<th rowspan = "2">
+			Level 2
+		</th>
+		<th>
+			Server
+		</th>
+		<td>
+			<img src = "images/example_server_level_2.svg" style = "width: 800px;"><br>
+			<ul>
+				<li>
+					Each segment at the level 1 is cut into at most \( R = 3 \) ones at the level 2 (<span style = "color: fuchsia;">fuchsia lines</span> are new boundaries, <span style = "color: purple;">purple lines</span> are old boundaries).
+					<ul>
+						<li>
+							Segment \( seg_{(1, 1)} \): Following the <a href = "#rule3">rule 3</a>.
+						</li>
+						<li>
+							Segment \( seg_{(1, 2)} \): Following the <a href = "#rule2">rule 2</a>.
+						</li>
+						<li>
+							Segment \( seg_{(1, 3)} \): Following the <a href = "#rule5">rule 5</a>.
+						</li>
+					</ul>
+				</li>
+				<li>
+					Encode the data stream.
+					<ul>
+						<li>
+							Segment \( seg_{(1, 1)} \)
+							<ul>
+								<li>
+									Old data points \( max = 2, min = 0 \): The signals \( sig_{(1, 1, max)} = 1, sig_{(1, 1, min)} = 2\) of \( \lceil \log_2{R} \rceil = 2 \) bits to indicate their new locations.
+								</li>
+								<li>
+									New data point \( 1 \): Following the signals using \( B \) bits.
+								</li>
+							</ul>
+						</li>
+						<li>
+							Segment \( seg_{(1, 2)} \)
+							<ul>
+								<li>
+									Write 1-bit signal to indicate the case 2 of the rule 2.
+								</li>
+							</ul>
+						</li>
+						<li>
+							Segment \( seg_{(1, 3)} \)
+							<ul>
+								<li>
+									Old data points \( max = 9, min = 2 \): The signals \( sig_{(1, 3, max)} = 2, sig_{(1, 3, min)} = 0\) of \( \lceil \log_2{R} \rceil = 2 \) bits to indicate their new locations.
+								</li>
+								<li>
+									New data points \( 3, 7, 5, 4 \): Following the signals in the order, each of which uses \( B \) bits.
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					Transmit the data stream to sites.
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Site
+		</th>
+		<td>
+			<ul>
+				<li>
+					Receive the data stream from the server.
+				</li>
+			</ul>
+			<img src = "images/example_site_length_2.svg" style = "width: 800px;"><br>
+			<ul>
+				<li>
+					Use \( R \) and the current segment lengths to apply an approriate rule.
+				</li>
+				<li>
+					Evaluate segment lengths at the next level.	
+					<ul>
+						<li>
+							Segment \( seg_{(1, 1)} \): Following the <a href = "#rule3">rule 3</a>.
+						</li>
+						<li>
+							Segment \( seg_{(1, 2)} \): Following the <a href = "#rule2">rule 2</a>.
+						</li>
+						<li>
+							Segment \( seg_{(1, 3)} \): Following the <a href = "#rule5">rule 5</a>.
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<img src = "images/example_site_level_2.svg" style = "width: 800px;"><br>
+			<ul>
+				<li>
+					Decode the data stream.
+					<ul>
+						<li>
+							Segment \( seg_{(1, 1)} \)
+							<ul>
+								<li>
+									Read two \( \lceil \log_2{R} \rceil \) -bit signals to assign new locations for \( max = 2, min = 0 \).
+								</li>
+								<li>
+									There are one unknown data points in \( seg_{(2, 1)} \). Read \( B \) bits to fill in the segment.
+								</li>
+							</ul>
+						</li>
+						<li>
+							Segment \( seg_{(1, 2)} \)
+							<ul>
+								<li>
+									Read 1-bit signals to assign new locations for \( max = 8, min = 6 \).
+								</li>
+							</ul>
+						</li>
+						<li>
+							Segment \( seg_{(1, 3)} \)
+							<ul>
+								<li>
+									Read two \( \lceil \log_2{R} \rceil \) -bit signals to assign new locations for \( max = 9, min = 2 \).
+								</li>
+								<li>
+									There are 4 unknown data points. Read \( 4 B \) bits to fill in the segments in the order.
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					Repeat data points to construct \( Q^{(2)} = (Q_{ub}^{(2)}, Q_{lb}^{(2)}) \).
+				</li>
+			</ul>	
+		</td>
+	</tr>
+	<tr>
+		<th rowspan = "2">
+			Level 3
+		</th>
+		<th>
+			Server
+		</th>
+		<td>
+			<img src = "images/example_server_level_3.svg" style = "width: 800px;"><br>
+			<ul>
+				<li>
+					Each segments at the level 2 is cut into at most \( R = 3 \) ones at the level 3 (<span style = "color: fuchsia;">fuchsia lines</span> are new boundaries, <span style = "color: purple;">purple lines</span> are old boundaries).
+					<ul>
+						<li>
+							Segments \( seg_{(2, 1)} \) to \( seg_{(2, 5)} \): Following the <a href = "#rule1">rule 1</a>.
+						</li>
+						<li>
+							Segments \( seg_{(2, 6)} \) to \( seg_{(2, 7)} \): Following the <a href = "#rule2">rule 2</a>.
+						</li>
+						<li>
+							Segments \( seg_{(2, 8)} \): Following the <a href = "#rule4">rule 4</a>.
+						</li>
+					</ul>
+				</li>
+				<li>
+					Encode the data stream.
+					<ul>
+						<li>
+							Segments \( seg_{(2, 1)} \) to \( seg_{(2, 5)} \)
+							<ul>
+								<li>
+									Skip those segments since they are the finest ones.
+								</li>
+							</ul>
+						</li>
+						<li>
+							Segments \( seg_{(2, 6)} \) to \( seg_{(2, 7)} \)
+							<ul>
+								<li>
+									Write 1-bit signal to indicate the case 1 of the rule 2.
+								</li>
+							</ul>
+						</li>
+						<li>
+							Segment \( seg_{(2, 8)} \)
+							<ul>
+								<li>
+									Old data points \( max = 9, min = 4 \): The signals \( sig_{(2, 8, max)} = 0, sig_{(2, 8, min)} = 2\) of \( \lceil \log_2{R} \rceil = 2 \) bits to indicate their new locations.
+								</li>
+								<li>
+									New data points \( 8, 6 \): Following the signals in the order, each of which uses \( B \) bits.
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					Transmit the data stream to sites.
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Site
+		</th>
+		<td>
+			<ul>
+				<li>
+					Receive the data stream from the server.
+				</li>
+			</ul>
+			<img src = "images/example_site_length_3.svg" style = "width: 800px;"><br>
+			<ul>
+				<li>
+					Use \( R \) and the current segment lengths to apply an approriate rule.
+				</li>
+				<li>
+					Evaluate segment lengths at the next level.	
+					<ul>
+						<li>
+							Segments \( seg_{(2, 1)} \) to \( seg_{(2, 5)} \): Following the <a href = "#rule1">rule 1</a>.
+						</li>
+						<li>
+							Segments \( seg_{(2, 6)} \) to \( seg_{(2, 7)} \): Following the <a href = "#rule2">rule 2</a>.
+						</li>
+						<li>
+							Segments \( seg_{(2, 8)} \): Following the <a href = "#rule4">rule 4</a>.
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<img src = "images/example_site_level_3.svg" style = "width: 800px;"><br>
+			<ul>
+				<li>
+					Decode the data stream.
+					<ul>
+						<li>
+							Segments \( seg_{(2, 1)} \) to \( seg_{(2, 5)} \)
+							<ul>
+								<li>
+									Directly copy the same segment at the previous level.
+								</li>
+							</ul>
+						</li>
+						<li>
+							Segment \( seg_{(2, 6)} \)
+							<ul>
+								<li>
+									Read 1-bit signals to assign new locations for \( max = 3, min = 2 \).
+								</li>
+							</ul>
+						</li>
+						<li>
+							Segment \( seg_{(2, 7)} \)
+							<ul>
+								<li>
+									Read 1-bit signals to assign new locations for \( max = 7, min = 5 \).
+								</li>
+							</ul>
+						</li>
+						<li>
+							Segment \( seg_{(2, 8)} \)
+							<ul>
+								<li>
+									Read two \( \lceil \log_2{R} \rceil \) -bit signals to assign new locations for \( max = 9, min = 4 \).
+								</li>
+								<li>
+									There are 2 unknown data points. Read \( 2 B \) bits to fill in the segments in the order.
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					Repeat data points to construct \( Q^{(3)} = (Q_{ub}^{(3)}, Q_{lb}^{(3)}) \).
+				</li>
+			</ul>	
+		</td>
+	</tr>
+	<tr>
+		<th rowspan = "2">
+			Level 4
+		</th>
+		<th>
+			Server
+		</th>
+		<td>
+			<img src = "images/example_server_level_4.svg" style = "width: 800px;"><br>
+			<ul>
+				<li>
+					Each segment at the level 3 is cut into at most \( R = 3 \) ones at the level 4 (<span style = "color: fuchsia;">fuchsia lines</span> are new boundaries, <span style = "color: purple;">purple lines</span> are old boundaries).
+					<ul>
+						<li>
+							Segments \( seg_{(3, 1)} \) to \( seg_{(3, 11)} \): Following the <a href = "#rule1">rule 1</a>.
+						</li>
+						<li>
+							Segments \( seg_{(3, 12)} \): Following the <a href = "#rule2">rule 2</a>.
+						</li>
+					</ul>
+				</li>
+				<li>
+					Encode the data stream.
+					<ul>
+						<li>
+							Segments \( seg_{(3, 1)} \) to \( seg_{(3, 11)} \)
+							<ul>
+								<li>
+									Skip those segments since they are the finest ones.
+								</li>
+							</ul>
+						</li>
+						<li>
+							Segment \( seg_{(3, 12)} \))
+							<ul>
+								<li>
+									Write 1-bit signal to indicate the case 2 of the rule 2.
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					Transmit the data stream to sites.
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Site
+		</th>
+		<td>
+			<ul>
+				<li>
+					Receive the data stream from the server.
+				</li>
+			</ul>
+			<img src = "images/example_site_length_4.svg" style = "width: 800px;"><br>
+			<ul>
+				<li>
+					Use \( R \) and the current segment lengths to apply an approriate rule.
+				</li>
+				<li>
+					Evaluate segment lengths at the next level.	
+					<ul>
+						<li>
+							Segments \( seg_{(3, 1)} \) to \( seg_{(3, 11)} \): Following the <a href = "#rule1">rule 1</a>.
+						</li>
+						<li>
+							Segment \( seg_{(3, 12)} \): Following the <a href = "#rule2">rule 2</a>.
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<img src = "images/example_site_level_4.svg" style = "width: 800px;"><br>
+			<ul>
+				<li>
+					Decode the data stream.
+					<ul>
+						<li>
+							Segments \( seg_{(3, 1)} \) to \( seg_{(3, 11)} \)
+							<ul>
+								<li>
+									Directly copy the same segment at the previous level.
+								</li>
+							</ul>
+						</li>
+						<li>
+							Segment \( seg_{(3, 12)} \)
+							<ul>
+								<li>
+									Read 1-bit signals to assign new locations for \( max = 6, min = 4 \).
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					Repeat data points to construct \( Q^{(4)} = (Q_{ub}^{(4)}, Q_{lb}^{(4)}) \).
+					<ul>
+						<li>
+							Note that \( Q^{(4)} = Q \). There are total \( L = 4 \) levels for this example.
+						</li>
+					</ul>
+				</li>
+			</ul>	
+		</td>
+	</tr>
+</table>
+</body>
+</html>
