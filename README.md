@@ -1,6 +1,6 @@
-# Distributed Time Series KNN DTW
+# Bandwidth-Efficient Distributed k-Nearest-Neighbor Search with Dynamic Time Warping
 
-Supplementary material and source code of paper "Bandwidth-Efficient Distributed k-Nearest-Neighbor Search with Dynamic Time Warping"
+Supplementary material and source code
 
 ## Directories
 
