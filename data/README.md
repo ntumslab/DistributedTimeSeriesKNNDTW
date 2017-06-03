@@ -7,7 +7,7 @@ Our experimented data files follow the format of UCR datasets.
 One time series of length T per line:
 
 ```
-label data_point_1 data_point_2 ... data_point_T
+time_series_class data_point_1 data_point_2 ... data_point_T
 ```
 
 Our work does not use the first value that represents the class label of time series.
